@@ -30,7 +30,16 @@ export default function WheelOfLife() {
     satisfaction: {},
     motivation: {}
   });
+
   const [calculatedResults, setCalculatedResults] = useState<CalculatedResults | null>(null);
+
+  const strongestAreas = calculatedResults
+    ? calculatedResults.priorityRanked
+        .filter(item => item.satisfaction >= 7)
+        .map(item => item.label)
+        .join(', ')
+    : '';
+
   const { toast } = useToast();
 
   const emailForm = useForm<EmailResultsRequest>({
@@ -310,7 +319,7 @@ export default function WheelOfLife() {
                 <h2 className="font-playfair text-4xl font-medium mb-4">Your Wheel of Life</h2>
               </div>
 
-              <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="flex flex-col gap-12 items-start">
                 {/* Radar Chart */}
                 <Card className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-sm border border-sage/20">
                   <CardContent className="p-8">
@@ -385,7 +394,7 @@ export default function WheelOfLife() {
                     <CardContent className="p-8">
                       <h3 className="font-playfair text-2xl font-medium mb-4">Your Insights</h3>
                       <div className="space-y-4 text-charcoal/80">
-                        <p>Your wheel shows a <strong>moderately balanced life</strong> with some areas clearly calling for attention. You have strong foundations in relationships and career, which can support growth in other areas.</p>
+                        <p>Your strongest areas are: <strong>{strongestAreas || 'No strong areas identified yet'}</strong>.</p>
                         <p>Your highest priority appears to be <strong>{calculatedResults.priorityRanked[0]?.label}</strong> - this suggests you're ready to bring more focus and energy into this area of your life.</p>
                         <div className="text-sm bg-sage/10 p-4 rounded-xl border-l-4 border-sage">
                           <p className="font-medium mb-2">Growth Tip:</p>
@@ -446,57 +455,6 @@ export default function WheelOfLife() {
             </div>
           </section>
 
-          {/* Email Results */}
-          <section className="py-12 px-4">
-            <div className="max-w-2xl mx-auto">
-              <Card className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-sm border border-sage/20">
-                <CardContent className="p-8 md:p-12">
-                  <div className="text-center mb-8">
-                    <h3 className="font-playfair text-3xl font-medium mb-4">Email Your Results</h3>
-                    <p className="text-charcoal/70">Keep your insights handy and track your progress over time</p>
-                  </div>
-                  
-                  <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-6">
-                    <div>
-                      <Label htmlFor="email" className="block font-medium text-charcoal mb-2">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        {...emailForm.register("email")}
-                        className="w-full px-4 py-3 rounded-xl border border-sage/30 bg-white/70 focus:outline-none focus:ring-2 focus:ring-sage/50 focus:border-sage transition-all duration-300"
-                        placeholder="your.email@example.com"
-                      />
-                      {emailForm.formState.errors.email && (
-                        <p className="text-sm text-red-500 mt-1">{emailForm.formState.errors.email.message}</p>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="name" className="block font-medium text-charcoal mb-2">Your Name (Optional)</Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        {...emailForm.register("name")}
-                        className="w-full px-4 py-3 rounded-xl border border-sage/30 bg-white/70 focus:outline-none focus:ring-2 focus:ring-sage/50 focus:border-sage transition-all duration-300"
-                        placeholder="Your name"
-                      />
-                    </div>
-
-
-
-                    <div className="text-center">
-                      <Button
-                        type="submit"
-                        disabled={emailMutation.isPending}
-                        className="bg-sage hover:bg-sage/80 text-charcoal px-8 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-md w-full md:w-auto"
-                      >
-                        {emailMutation.isPending ? "Sending..." : "Send My Results"}
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
           </section>
         </>
       )}
