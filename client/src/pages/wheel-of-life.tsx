@@ -454,8 +454,6 @@ export default function WheelOfLife() {
               </div>
             </div>
           </section>
-
-          </section>
         </>
       )}
 
