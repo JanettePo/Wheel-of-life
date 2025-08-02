@@ -30,16 +30,7 @@ export default function WheelOfLife() {
     satisfaction: {},
     motivation: {}
   });
-
   const [calculatedResults, setCalculatedResults] = useState<CalculatedResults | null>(null);
-
-  const strongestAreas = calculatedResults
-    ? calculatedResults.priorityRanked
-        .filter(item => item.satisfaction >= 7)
-        .map(item => item.label)
-        .join(', ')
-    : '';
-
   const { toast } = useToast();
 
   const emailForm = useForm<EmailResultsRequest>({
@@ -319,7 +310,7 @@ export default function WheelOfLife() {
                 <h2 className="font-playfair text-4xl font-medium mb-4">Your Wheel of Life</h2>
               </div>
 
-              <div className="flex flex-col gap-12 items-start">
+              <div className="grid grid-cols-1 gap-12 items-start">
                 {/* Radar Chart */}
                 <Card className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-sm border border-sage/20">
                   <CardContent className="p-8">
@@ -394,7 +385,6 @@ export default function WheelOfLife() {
                     <CardContent className="p-8">
                       <h3 className="font-playfair text-2xl font-medium mb-4">Your Insights</h3>
                       <div className="space-y-4 text-charcoal/80">
-                        <p>Your strongest areas are: <strong>{strongestAreas || 'No strong areas identified yet'}</strong>.</p>
                         <p>Your highest priority appears to be <strong>{calculatedResults.priorityRanked[0]?.label}</strong> - this suggests you're ready to bring more focus and energy into this area of your life.</p>
                         <div className="text-sm bg-sage/10 p-4 rounded-xl border-l-4 border-sage">
                           <p className="font-medium mb-2">Growth Tip:</p>
